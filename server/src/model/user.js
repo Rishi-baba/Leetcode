@@ -17,7 +17,7 @@ const userSchema = new Schema({
   age:{
     type:Number,
   },
-  emailID:{
+  emailId:{
     type:String,
     required:true,
     minLength:3,
@@ -27,10 +27,11 @@ const userSchema = new Schema({
     immutable:"true",
     lowercase:"true"
   },
-  role:{
-    enum:['user','admin'],
-    default:"user"
-  },
+role: {
+  type: String,
+  enum: ["user", "admin"],
+  default: "user"
+},
   password:{
     type:String,
     required:true,
@@ -42,6 +43,6 @@ const userSchema = new Schema({
   timestamps:true
 })
 
-const User = mongoose.model("user",userSchema)
+const User = mongoose.model('user',userSchema)
 
 export default User

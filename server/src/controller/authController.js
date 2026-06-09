@@ -3,7 +3,7 @@ import validate from "../utils/validator.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
-const register = async(req,res)=>{
+export const register = async(req,res)=>{
 
   try {
 
@@ -29,22 +29,22 @@ const register = async(req,res)=>{
 
 }
 
-const login = async(req,res)=>{
+export const login = async(req,res)=>{
 
   try {
     
     const {emailId, password} = req.body
-    const user = User.findOne({emailId})
+    const user = await User.findOne({emailId})
 
-    const isMatch = bcrypt.compare(user.password, password)
-    if(!ismMatch){
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
       throw new Error("invalid cred")
     }
 
     const token = jwt.sign({userId:user._id, email:emailId},process.env.JWT_TOKEN,{expiresIn:60*60})
 
     res.cookie('token',token, {maxAge: 60 * 60 * 1000})
-    res.status(201).send("user created successfully")
+    res.status(201).send("Login sucksexfull")
 
   } catch (error) {
     console.log(error)
@@ -52,3 +52,16 @@ const login = async(req,res)=>{
   }
 
 }
+
+
+export const logout = async(req,res)=>{
+
+  try {
+    
+    
+
+  } catch (error) {
+    
+  }
+
+} 
