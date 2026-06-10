@@ -72,7 +72,7 @@ const problemSchema = new Schema(
       },
     ],
 
-    refemceSolution:[
+    referenceSolution:[
       {
 
         language:{
