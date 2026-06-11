@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import connectdb from './src/config/db.js';
 import authRouter from './src/Router/userAuth.js';
 import client from './src/config/redis.js';
+import problemRouter from './src/Router/createProblem.js';
 
 
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 
 app.use('/user', authRouter)
+app.use('/problem', problemRouter)
 
 const initillizeConnection = async()=>{
 

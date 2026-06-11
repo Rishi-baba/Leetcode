@@ -76,12 +76,12 @@ const problemSchema = new Schema(
       {
 
         language:{
-          type:string,
+          type:String,
           required:true
         },
 
         completeCode:{
-          type:string,
+          type:String,
           required:true
         },
 
