@@ -37,7 +37,10 @@ role: {
     required:true,
   },
   problemSolved:{
-    type:String
+    type:[{
+      type:Schema.Types.ObjectId,
+      ref:'problem'
+    }]
   }
 },{
   timestamps:true

@@ -72,12 +72,27 @@ export const submitCode = async(req,res)=>{
   submittedResult.memory = memory;
 
   await submittedResult.save();
+
+
+
+  if (!res.result.problemSolved.includes(problemId)) {
+    res.result.problemSolved.push(problemId);
+    await res.result.save();
+}
+
   res.status(201).send(submittedResult)
 
   } catch (error) {
     res.status(500).send("internal server error" + error)
   }
+}
+export const solvedProblems = async(req,res)=>{
 
-  
+  try {
+    const count = res.result.problemSolved.lenght;
+    res.status(200).send(count)
+  } catch (error) {
+    res.status(500).send("error occured" + error)
+  }
 
 }
