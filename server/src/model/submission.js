@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
 const submissionSchema = new Schema(
   {
@@ -62,4 +61,7 @@ const submissionSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Submission", submissionSchema); 
+const submission = mongoose.model("Submission", submissionSchema)
+
+export default submission
+

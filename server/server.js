@@ -6,6 +6,7 @@ import connectdb from './src/config/db.js';
 import authRouter from './src/Router/userAuth.js';
 import client from './src/config/redis.js';
 import problemRouter from './src/Router/createProblem.js';
+import submitRouter from './src/Router/submitRoute.js';
 
 
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use('/user', authRouter)
 app.use('/problem', problemRouter)
+app.use('/submission', submitRouter)
 
 const initillizeConnection = async()=>{
 
