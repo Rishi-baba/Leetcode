@@ -58,3 +58,110 @@ export const createProblem = async (req, res) => {
     });
   }
 };
+
+export const problemUpdate= async(req,res)=>{
+
+  try {
+    const  _id  = req.params.id
+    const {
+      title,
+      description,
+      difficulty,
+      tags,
+      visibleTestCases,
+      hiddenTestCases,
+      startCode,
+      referenceSolution,
+      problemCreator,
+    } = req.body;
+
+    if(!_id){
+      return res.status(400).send("id not found")
+    }
+
+
+    
+    for(const {language,completeCode} of referenceSolution){
+
+      const languageId = getLanguageById(language)
+
+      const submissions = visibleTestCases.map(( testCases ) => ({
+        source_code: completeCode,
+        language_id: languageId,
+        stdin: testCases.input,
+        expected_output: testCases.output,
+      }));
+
+      const submitResult = await submitBatch(submissions)
+
+      const resultToken = submitResult.map((value)=>value.token)
+
+      const testResult = await submitToken(resultToken)
+    } 
+    const newProblem = await Problem.findByIdAndUpdate(_id, {...req.body}, {runValidators:true, returnDocument: "after"})
+
+    res.status(200).send(newProblem)
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+
+}
+
+export const deleteProblem = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id)
+      return res.status(400).send("ID is Missing");
+
+    const deletedProblem = await Problem.findByIdAndDelete(id);
+
+    if (!deletedProblem)
+      return res.status(404).send("Problem is Missing");
+
+    res.status(200).send("Successfully Deleted");
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).send("Something went wrong");
+  }
+};
+
+export const getProblemById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id)
+      return res.status(400).send("ID is Missing");
+
+    const getProblem = await Problem.findById(id).select("_id title description difficulty tags visibleTestCases startCode referenceSolution");
+
+    if (!getProblem)
+      return res.status(404).send("Problem is Missing");
+
+    res.status(200).send(getProblem);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).send("Something went wrong");
+  }
+};
+export const getAllProblem = async (req, res) => {
+  try {
+    const getProblem = await Problem.find({}).select("_id title difficulty tags ");
+
+    if (getProblem.length===0)
+      return res.status(404).send("Problem is Missing");
+
+    res.status(200).send(getProblem);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).send("Something went wrong");
+  }
+};
