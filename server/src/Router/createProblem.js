@@ -18,5 +18,7 @@ problemRouter.get("/getAllProblem",userMiddleware, getAllProblem);
 
 problemRouter.get("/problemById/:id",userMiddleware, getProblemById);
 
+problemRouter.get("/submittedProblem:pid", userMiddleware, getsubmittedProblem)
+
 export default problemRouter
 

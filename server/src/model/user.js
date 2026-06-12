@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import { deleteProfil } from "../controller/authController";
 
 const userSchema = new Schema({
   firstName:{
@@ -44,6 +45,12 @@ role: {
   }
 },{
   timestamps:true
+})
+
+userSchema.post("findOneAndDelete", async function( userInfo ){
+  if(userInfo){
+    await mongoose.model('submission').deleteMany({userId: userInfo._id})
+  }
 })
 
 const User = mongoose.model('user',userSchema)

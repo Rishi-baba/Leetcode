@@ -1,5 +1,6 @@
 import Problem from "../model/problem.js"
 import submission from "../model/submission.js"
+import User from "../model/user.js"
 import { getLanguageById, submitBatch, submitToken } from "../utils/problemUtil.js"
 
 
@@ -89,10 +90,56 @@ export const submitCode = async(req,res)=>{
 export const solvedProblems = async(req,res)=>{
 
   try {
-    const count = res.result.problemSolved.lenght;
-    res.status(200).send(count)
+
+    const userId = res.result._id;
+    const user = User.findById(userId).populate({
+      path:"problemSolved",
+      select:"_id title difficulty tags"
+    });  
+
+    res.status(200).send(user.problemSolved)
+  
   } catch (error) {
     res.status(500).send("error occured" + error)
   }
 
+} 
+
+
+export const runcode = async(req,res)=>{
+
+  try {
+    const userId = res.result._id
+    const problemId = req.params.id 
+
+    const {code, language } = req.body
+
+    if(!userId|| !problemId || !code || !language){
+      return res.status(400).send("some fields are missing");
+    }
+
+    const problem = await Problem.findById(problemId)
+
+
+
+
+
+    const languageId = getLanguageById(language)
+
+    const submissions = problem.visibleTestCases.map(( testCases ) => ({
+      source_code: code,
+      language_id: languageId,
+      stdin: testCases.input,
+      expected_output: testCases.output,
+    }));
+
+    const submitResult = await submitBatch(submissions)
+    const resultToken = submitResult.map((value)=>value.token)
+    const testResult = await submitToken(resultToken)
+
+    res.status(201).send(submittedResult)
+
+  } catch (error) {
+    res.status(500).send("internal server error" + error)
+  }
 }

@@ -1,4 +1,5 @@
 import Problem from "../model/problem.js";
+import submission from "../model/submission.js";
 import { getLanguageById, submitBatch, submitToken } from "../utils/problemUtil.js";
 
 export const createProblem = async (req, res) => {
@@ -165,3 +166,21 @@ export const getAllProblem = async (req, res) => {
     res.status(500).send("Something went wrong");
   }
 };
+export const getsubmittedProblem =async (req,res)=>{
+
+  try {
+    const userId = res.result._id
+    const problemId = req.params.pid
+
+    const ans = await submission.find(({userId,problemId}))
+
+    if(ans.length==0){
+      res.ststus(200).send("no submission")
+    }
+
+    res.ststus(200).send(ans)
+  } catch (error) {
+    res.ststus(500).send("internl error", error)
+  }
+  
+}

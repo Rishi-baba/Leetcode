@@ -3,6 +3,7 @@ import validate from "../utils/validator.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import client from '../config/redis.js'
+import submission from "../model/submission.js"
 
 export const register = async(req,res)=>{
 
@@ -107,4 +108,16 @@ export const adminRegister = async (req,res)=>{
     console.log(error)
     res.status(500).send("Something went wrong");
   }
+}
+
+export const deleteProfil = async (req,res)=>{
+  const userId = res.result._id
+
+  await User.findByIdAndDelete(userId)
+
+  // await submission.deleteMany({userId})
+
+  res.status(200).send("Deleted successfully")
+
+
 }
