@@ -21,7 +21,12 @@ export const register = async(req,res)=>{
     const token =  jwt.sign({userId:user._id,role:user.role, email:emailId},process.env.JWT_TOKEN,{expiresIn:60*60})
 
     res.cookie('token',token, {maxAge: 60 * 60 * 1000})
-    res.status(201).send("user created successfully")
+    const result = {
+      firstName: user.firstName,
+      emailId: user.emailId,
+      _id: user._id
+    }
+    res.status(201).send("user created successfully",result)
 
 
   } catch (error) {
@@ -45,8 +50,14 @@ export const login = async(req,res)=>{
 
     const token = jwt.sign({userId:user._id, role:user.role, email:emailId},process.env.JWT_TOKEN,{expiresIn:60*60})
 
+      const result = {
+        firstName: user.firstName,
+        emailId: user.emailId,
+        _id: user._id
+      }
+
     res.cookie('token',token, {maxAge: 60 * 60 * 1000})
-    res.status(201).send("Login sucksexfull")
+    res.status(201).send("Login sucksexfull", result)
 
   } catch (error) {
     console.log(error)
@@ -115,7 +126,7 @@ export const deleteProfil = async (req,res)=>{
 
   await User.findByIdAndDelete(userId)
 
-  // await submission.deleteMany({userId})
+  await submission.deleteMany({userId})
 
   res.status(200).send("Deleted successfully")
 

@@ -34,3 +34,28 @@ export const userMiddleware = async(req,res,next)=>{
   next()
 
 }
+export const rateLimiting = async(req,res,next)=>{
+  const userId = res.result._id
+  const redisKey = `submit_countdown:${userId}`
+
+  try {
+    
+    const exist = await client.exists(redisKey)
+
+    if(exist){
+      return res.status(429).send("please wait for 10 sec before sending")
+    }
+
+    await client.set(redisKey, 'cooldown_active',{
+      EX:10,
+      NX:true
+    })
+
+    next()
+
+
+  } catch (error) {
+    
+  }
+
+}
